@@ -23,8 +23,6 @@ if __name__ == "__main__":
 
     X_train, y_train = dataset["train_unlabeled"]
 
-    input_dim = X_train.shape[1]
-
     train_data = FederatedTensorDataset(
         data={"x": X_train, "y": y_train}, num_of_clients=config.data.num_of_clients
     )
@@ -35,7 +33,7 @@ if __name__ == "__main__":
     easyfl.register_dataset(train_data=train_data, test_data=None)
     easyfl.register_model(
         model=TabNetPretraining(
-            input_dim=input_dim,
+            input_dim=X_train.shape[1],
             pretraining_ratio=params.pretraining_ratio,
             n_d=params.n_d,
             n_a=params.n_a,

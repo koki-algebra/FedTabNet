@@ -62,6 +62,7 @@ tracking:  # The configurations for logging and tracking.
   metric_file: ""
   save_every: 1
 
+seed: 0
 
 # model parameters
 model_parameters:
