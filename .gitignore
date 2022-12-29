@@ -1,0 +1,9 @@
+# for MacOS
+.DS_Store
+
+# python
+__pycache__
+
+# easyfl
+src/logs/
+src/saved_models/
