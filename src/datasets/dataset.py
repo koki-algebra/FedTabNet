@@ -7,17 +7,28 @@ from sklearn.model_selection import train_test_split
 
 
 def get_dataset(
-    file_path: str, target: str, labeled_size: float, train_size=0.8, seed=0
+    file_path: str,
+    target: str,
+    labeled_size: float,
+    train_size=0.8,
+    valid_size: float = None,
+    seed=0,
 ) -> Tuple[Dict[str, Tuple[np.ndarray, np.ndarray]], List[int], List[int]]:
     df: pd.DataFrame = pd.read_csv(file_path, sep=",")
 
     train_l_df: pd.DataFrame
     train_u_df: pd.DataFrame
     test_df: pd.DataFrame
+    valid_df: pd.DataFrame
     train_df, test_df = train_test_split(df, train_size=train_size, random_state=seed)
     train_l_df, train_u_df = train_test_split(
         train_df, train_size=labeled_size, random_state=seed
     )
+    if valid_size is not None:
+        test_df, valid_df = train_test_split(
+            test_df, test_size=valid_size, random_state=seed
+        )
+        valid_indices = valid_df.index.values
 
     train_l_indices = train_l_df.index.values
     train_u_indices = train_u_df.index.values
@@ -68,5 +79,12 @@ def get_dataset(
         "train_unlabeled": (X_u_train, y_u_train),
         "test": (X_test, y_test),
     }
+
+    if valid_size is not None:
+        # valid
+        X_valid = df[features].values[valid_indices]
+        y_valid = df[target].values[valid_indices]
+
+        dataset["valid"] = (X_valid, y_valid)
 
     return dataset, cat_idxs, cat_dims
