@@ -18,6 +18,7 @@ if __name__ == "__main__":
         target=config.data.target,
         labeled_size=config.data.labeled_size,
         train_size=config.data.train_size,
+        seed=config.seed,
     )
 
     X_train, y_train = dataset["train_unlabeled"]

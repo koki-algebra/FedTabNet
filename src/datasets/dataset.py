@@ -7,15 +7,17 @@ from sklearn.model_selection import train_test_split
 
 
 def get_dataset(
-    file_path: str, target: str, labeled_size: float, train_size=0.8
+    file_path: str, target: str, labeled_size: float, train_size=0.8, seed=0
 ) -> Tuple[Dict[str, Tuple[np.ndarray, np.ndarray]], List[int], List[int]]:
     df: pd.DataFrame = pd.read_csv(file_path, sep=",")
 
     train_l_df: pd.DataFrame
     train_u_df: pd.DataFrame
     test_df: pd.DataFrame
-    train_df, test_df = train_test_split(df, train_size=train_size)
-    train_l_df, train_u_df = train_test_split(train_df, train_size=labeled_size)
+    train_df, test_df = train_test_split(df, train_size=train_size, random_state=seed)
+    train_l_df, train_u_df = train_test_split(
+        train_df, train_size=labeled_size, random_state=seed
+    )
 
     train_l_indices = train_l_df.index.values
     train_u_indices = train_u_df.index.values

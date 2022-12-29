@@ -3,42 +3,11 @@ task_id: ""
 
 # Provide dataset and federated learning simulation related configuration.
 data:
-  # The root directory where datasets are stored.
-  root: "./data/"
-  # The name of the dataset, support: femnist, shakespeare, cifar10, and cifar100.
-  dataset: femnist
-  # The data distribution of each client, support: iid, niid (for femnist and shakespeare), and dir and class (for cifar datasets).
-    # `iid` means independent and identically distributed data.
-    # `niid` means non-independent and identically distributed data for FEMNIST and Shakespeare.
-    # `dir` means using Dirichlet process to simulate non-iid data, for CIFAR-10 and CIFAR-100 datasets.
-    # `class` means partitioning the dataset by label classes, for datasets like CIFAR-10, CIFAR-100.
-  split_type: "iid"
-
-  # The minimal number of samples in each client. It is applicable for LEAF datasets and dir simulation of CIFAR-10 and CIFAR-100.
-  min_size: 10
-  # The fraction of data sampled for LEAF datasets. e.g., 10% means that only 10% of total dataset size are used.
-  data_amount: 0.05
-  # The fraction of the number of clients used when the split_type is 'iid'.
-  iid_fraction: 0.1
-  # Whether partition users of the dataset into train-test groups. Only applicable to femnist and shakespeare datasets.
-    # True means partitioning users of the dataset into train-test groups.
-    # False means partitioning each users' samples into train-test groups.
-  user: False
-  # The fraction of data for training; the rest are for testing.
-  train_test_split: 0.9
-
-  # The number of classes in each client. Only applicable when the split_type is 'class'.
-  class_per_client: 1
-  # The targeted number of clients to construct.used in non-leaf dataset, number of clients split into. for leaf dataset, only used when split type class.
+  file_path: "./data/uci_income/adult.csv"
+  target: "salary"
+  train_size: 0.8
+  labeled_size: 0.1
   num_of_clients: 10
-  # The parameter for Dirichlet distribution simulation, applicable only when split_type is `dir` for CIFAR datasets.
-  alpha: 0.5
-
-  # The targeted distribution of quantities to simulate data quantity heterogeneity.
-    # The values should sum up to 1. e.g., [0.1, 0.2, 0.7].
-    # The `num_of_clients` should be divisible by `len(weights)`.
-    # None means clients are simulated with the same data quantity.
-  weights: NULL
 
 # The name of the model for training, support: lenet, rnn, resnet, resnet18, resnet50, vgg9.
 model: lenet
