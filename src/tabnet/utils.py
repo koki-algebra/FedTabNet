@@ -1,7 +1,8 @@
 import copy
+from typing import List
 
 import torch
-from torch import nn
+from torch import nn, Tensor
 
 
 def load_weights_from_pretrained(
@@ -23,3 +24,12 @@ def load_weights_from_pretrained(
             update_state_dict[new_param] = weights
 
     model.load_state_dict(update_state_dict)
+
+
+def tensor_exists(tensor: Tensor, l: List[Tensor]) -> bool:
+    for val in l:
+        if tensor.shape == val.shape:
+            if tensor.eq(val).any():
+                return True
+
+    return False

@@ -47,7 +47,7 @@ class Client(BaseClient):
             batch_loss = []
             for X, y in self.train_loader:
                 X: Tensor = X.to(device).float()
-                y: Tensor = y.to(device).float()
+                y: Tensor = y.to(device).long()
 
                 output, M_loss = self.model(X)
 

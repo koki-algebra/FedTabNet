@@ -93,3 +93,5 @@ if __name__ == "__main__":
     easyfl.register_server(server=Server)
 
     easyfl.init(config)
+
+    easyfl.run()
