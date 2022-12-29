@@ -1,5 +1,5 @@
 # The unique identifier for each federated learning task
-task_id: ""
+task_id: "fine_tune"
 
 # Provide dataset and federated learning simulation related configuration.
 data:

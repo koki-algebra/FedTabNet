@@ -75,3 +75,6 @@ class Client(BaseClient):
 
         self.train_time = time.time() - start_time
         logger.info("Client {}, Train Time: {}".format(self.cid, self.train_time))
+
+    def test(self, conf, device):
+        pass
