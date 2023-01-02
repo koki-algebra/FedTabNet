@@ -4,7 +4,7 @@ from pytorch_tabnet.pretraining import TabNetPretrainer
 from pytorch_tabnet.tab_model import TabNetClassifier
 from sklearn.metrics import accuracy_score
 
-from datasets import get_dataset
+from utils import get_dataset
 
 
 if __name__ == "__main__":
@@ -14,8 +14,8 @@ if __name__ == "__main__":
 
     # dataset
     dataset, cat_idxs, cat_dims = get_dataset(
-        file_path="./data/uci_income/adult.csv",
-        target="salary",
+        file_path="./data/covtype/covtype.zip",
+        target="Cover_Type",
         labeled_size=0.1,
         train_size=0.8,
         valid_size=0.2,

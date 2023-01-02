@@ -7,3 +7,5 @@ __pycache__
 # easyfl
 src/logs/
 src/saved_models/
+
+src/data/covtype/covtype.zip

@@ -5,7 +5,7 @@ from easyfl.datasets import FederatedTensorDataset
 from pytorch_tabnet.tab_network import TabNet, TabNetPretraining
 from pytorch_tabnet.multiclass_utils import infer_output_dim
 
-from datasets import get_dataset
+from utils import get_dataset
 from tabnet import load_weights_from_pretrained, Client, Server
 
 

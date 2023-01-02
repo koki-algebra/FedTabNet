@@ -4,7 +4,7 @@ import easyfl
 from easyfl.datasets import FederatedTensorDataset
 from pytorch_tabnet.tab_network import TabNetPretraining
 
-from datasets import get_dataset
+from utils import get_dataset
 from tabnet import PretrainerClient, PretrainerServer
 
 
