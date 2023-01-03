@@ -28,11 +28,11 @@ if __name__ == "__main__":
     X_test, y_test = dataset["test"]
     X_valid, y_valid = dataset["valid"]
 
-    # pretrainer
+    # load pretrained model
     pretrained_model = TabNetPretrainer()
-
     pretrained_model.load_model("./saved_models/tabnet/income_pretrained.zip")
 
+    # classifier
     clf = TabNetClassifier(
         seed=seed,
         optimizer_fn=Adam,
@@ -41,6 +41,7 @@ if __name__ == "__main__":
         scheduler_params={"gamma": 0.95},
     )
 
+    # fine-tuning
     clf.fit(
         X_train=X_train,
         y_train=y_train,
@@ -54,6 +55,7 @@ if __name__ == "__main__":
         patience=30,
     )
 
+    # test
     pred_test = clf.predict(X_test)
     test_acc = accuracy_score(y_pred=pred_test, y_true=y_test)
 

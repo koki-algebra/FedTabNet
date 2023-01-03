@@ -24,62 +24,38 @@ if __name__ == "__main__":
         seed=seed,
     )
 
-    X_l_train, y_l_train = dataset["train_labeled"]
-    X_u_train, _ = dataset["train_unlabeled"]
+    X_train, y_train = dataset["train_labeled"]
     X_test, y_test = dataset["test"]
     X_valid, y_valid = dataset["valid"]
 
-    # pretrainer
-    pretrained_model = TabNetPretrainer(
-        cat_idxs=cat_idxs,
-        cat_dims=cat_dims,
-        cat_emb_dim=3,
+    # load pretrained model
+    pretrained_model = TabNetPretrainer()
+    pretrained_model.load_model("./saved_models/tabnet/covtype_pretrained.zip")
+
+    # classifier
+    clf = TabNetClassifier(
         seed=seed,
-        n_a=64,
-        n_d=64,
-        lambda_sparse=1e-4,
-        momentum=0.7,
-        n_steps=5,
-        gamma=1.5,
-        n_shared=2,
         optimizer_fn=Adam,
         optimizer_params={"lr": 2e-2},
         scheduler_fn=ExponentialLR,
         scheduler_params={"gamma": 0.95},
     )
 
-    pretrained_model.fit(
-        X_train=X_u_train,
-        eval_set=[X_valid],
-        pretraining_ratio=0.8,
-        batch_size=16384,
-        virtual_batch_size=512,
-    )
-
-    pretrained_model.save_model("./saved_models/tabnet/covtype.pth")
-
-    clf = TabNetClassifier(
-        cat_idxs=cat_idxs,
-        cat_dims=cat_dims,
-        cat_emb_dim=3,
-        seed=seed,
-        optimizer_fn=Adam,
-        optimizer_params=dict(lr=2e-2),
-        scheduler_fn=ExponentialLR,
-        scheduler_params={"gamma": 0.95},
-    )
-
+    # fine-tuning
     clf.fit(
-        X_train=X_l_train,
-        y_train=y_l_train,
-        eval_set=[(X_l_train, y_l_train), (X_valid, y_valid)],
+        X_train=X_train,
+        y_train=y_train,
+        eval_set=[(X_train, y_train), (X_valid, y_valid)],
         eval_name=["train", "valid"],
         eval_metric=["accuracy"],
         from_unsupervised=pretrained_model,
-        batch_size=1024,
-        virtual_batch_size=512,
+        batch_size=2**10,
+        virtual_batch_size=2**9,
+        max_epochs=1000,
+        patience=30,
     )
 
+    # test
     pred_test = clf.predict(X_test)
     test_acc = accuracy_score(y_pred=pred_test, y_true=y_test)
 

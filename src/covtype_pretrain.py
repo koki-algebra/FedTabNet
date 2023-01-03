@@ -14,15 +14,16 @@ if __name__ == "__main__":
 
     # dataset
     dataset, cat_idxs, cat_dims = get_dataset(
-        file_path="./data/uci_income/adult.csv",
-        target="salary",
+        file_path="./data/covtype/covtype.zip",
+        target="Cover_Type",
         labeled_size=0.1,
         train_size=0.8,
         valid_size=0.2,
         seed=seed,
     )
 
-    X_u_train, _ = dataset["train_unlabeled"]
+    X_train, _ = dataset["train_unlabeled"]
+    X_test, y_test = dataset["test"]
     X_valid, y_valid = dataset["valid"]
 
     # pretrainer
@@ -31,8 +32,8 @@ if __name__ == "__main__":
         cat_dims=cat_dims,
         cat_emb_dim=3,
         seed=seed,
-        n_a=8,
-        n_d=8,
+        n_a=64,
+        n_d=64,
         lambda_sparse=1e-4,
         momentum=0.7,
         n_steps=5,
@@ -46,15 +47,15 @@ if __name__ == "__main__":
 
     # pretraining
     pretrained_model.fit(
-        X_train=X_u_train,
+        X_train=X_train,
         eval_set=[X_valid],
         eval_name=["valid"],
         pretraining_ratio=0.8,
-        batch_size=2**10,
+        batch_size=2**14,
         virtual_batch_size=2**9,
         max_epochs=1000,
         patience=30,
     )
 
     # save pretrained model
-    pretrained_model.save_model("./saved_models/tabnet/income_pretrained")
+    pretrained_model.save_model("./saved_models/tabnet/covtype_pretrained")
