@@ -11,7 +11,7 @@ from tabnet import PretrainerClient, PretrainerServer
 if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
-    config = easyfl.load_config("./config/tabnet_pretrain.yaml")
+    config = easyfl.load_config("./config/income_pretrain.yaml")
 
     dataset, cat_idxs, cat_dims = get_dataset(
         file_path=config.data.file_path,
@@ -44,7 +44,6 @@ if __name__ == "__main__":
             cat_emb_dim=params.cat_emb_dim,
             n_independent=params.n_independent,
             n_shared=params.n_shared,
-            epsilon=params.epsilon,
             virtual_batch_size=params.virtual_batch_size,
             momentum=params.momentum,
             mask_type=params.mask_type,

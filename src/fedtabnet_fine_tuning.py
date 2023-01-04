@@ -13,7 +13,7 @@ if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
     # load config
-    config = easyfl.load_config("./config/tabnet_main.yaml")
+    config = easyfl.load_config("./config/income_fine_tuning.yaml")
 
     # dataset
     dataset, cat_idxs, cat_dims = get_dataset(
@@ -52,7 +52,6 @@ if __name__ == "__main__":
         cat_emb_dim=pretrain_params.cat_emb_dim,
         n_independent=pretrain_params.n_independent,
         n_shared=pretrain_params.n_shared,
-        epsilon=pretrain_params.epsilon,
         virtual_batch_size=pretrain_params.virtual_batch_size,
         momentum=pretrain_params.momentum,
         mask_type=pretrain_params.mask_type,
@@ -74,7 +73,6 @@ if __name__ == "__main__":
         cat_emb_dim=params.cat_emb_dim,
         n_independent=params.n_independent,
         n_shared=params.n_shared,
-        epsilon=params.epsilon,
         virtual_batch_size=params.virtual_batch_size,
         momentum=params.momentum,
         mask_type=params.mask_type,
