@@ -36,7 +36,7 @@ client:
   track: False  # Whether track server metrics using the tracking service.
   batch_size: 128  # The batch size of training in client.
   test_batch_size: 5  # The batch size of testing in client.
-  local_epoch: 20  # The number of epochs to train in each round.
+  local_epoch: 10  # The number of epochs to train in each round.
   optimizer:
     type: "Adam"  # The name of the optimizer, options: Adam, SGD.
     lr: 0.02
