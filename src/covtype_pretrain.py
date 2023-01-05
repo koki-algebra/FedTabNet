@@ -51,7 +51,7 @@ if __name__ == "__main__":
         eval_name=["valid"],
         pretraining_ratio=0.8,
         batch_size=2**14,
-        virtual_batch_size=2**9,
+        virtual_batch_size=512,
         max_epochs=1000,
         patience=30,
     )

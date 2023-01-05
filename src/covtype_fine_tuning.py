@@ -49,8 +49,8 @@ if __name__ == "__main__":
         eval_name=["train", "valid"],
         eval_metric=["accuracy"],
         from_unsupervised=pretrained_model,
-        batch_size=2**10,
-        virtual_batch_size=2**9,
+        batch_size=1024,
+        virtual_batch_size=512,
         max_epochs=1000,
         patience=30,
     )
