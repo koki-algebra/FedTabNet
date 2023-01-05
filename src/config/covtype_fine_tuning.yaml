@@ -3,7 +3,7 @@ task_id: "fine_tune"
 
 # Provide dataset and federated learning simulation related configuration.
 data:
-  file_path: "./data/uci_income/adult.csv"
+  file_path: "./data/covtype/covtype.zip"
   target: "salary"
   train_size: 0.8
   labeled_size: 0.1
