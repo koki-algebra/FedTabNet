@@ -33,7 +33,6 @@ if __name__ == "__main__":
         seed=seed,
         n_a=8,
         n_d=8,
-        lambda_sparse=1e-4,
         momentum=0.7,
         n_steps=5,
         gamma=1.5,

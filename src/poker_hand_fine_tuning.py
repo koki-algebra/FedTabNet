@@ -39,6 +39,7 @@ if __name__ == "__main__":
         optimizer_params={"lr": 1e-2},
         scheduler_fn=ExponentialLR,
         scheduler_params={"gamma": 0.95},
+        lambda_sparse=1e-6,
     )
 
     # fine-tuning
