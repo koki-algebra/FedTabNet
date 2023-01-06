@@ -1,0 +1,5 @@
+https://archive-beta.ics.uci.edu/dataset/158/poker+hand
+
+instances: 1025010
+attributes: 11
+classes: 10

@@ -8,3 +8,4 @@ __pycache__
 src/logs/
 
 src/data/covtype/covtype.zip
+src/data/higgs/HIGGS.csv.gz

@@ -1,1 +1,5 @@
 https://www.kaggle.com/datasets/uciml/forest-cover-type-dataset
+
+instances: 581012
+attributes: 54
+classes: 7

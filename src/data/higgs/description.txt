@@ -1,0 +1,5 @@
+https://archive.ics.uci.edu/ml/datasets/HIGGS
+
+instances: 11000000
+attributes: 28
+classes: 2
