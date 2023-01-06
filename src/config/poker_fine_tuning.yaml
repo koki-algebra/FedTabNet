@@ -36,13 +36,13 @@ client:
   track: False  # Whether track server metrics using the tracking service.
   batch_size: 512  # The batch size of training in client.
   test_batch_size: 5  # The batch size of testing in client.
-  local_epoch: 10  # The number of epochs to train in each round.
+  local_epoch: 20  # The number of epochs to train in each round.
   optimizer:
     type: "Adam"  # The name of the optimizer, options: Adam, SGD.
     lr: 0.02
     momentum: 0.9
     weight_decay: 0
-  seed: 5000
+  seed: 1000
   local_test: False  # Whether test the trained models in clients before uploading them to the server.
 
   clip_value: 1
@@ -57,7 +57,7 @@ tracking:  # The configurations for logging and tracking.
   metric_file: ""
   save_every: 1
 
-seed: 5000  # The random seed.
+seed: 1000  # The random seed.
 
 
 # model parameters
