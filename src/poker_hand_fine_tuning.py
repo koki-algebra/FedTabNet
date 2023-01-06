@@ -36,7 +36,7 @@ if __name__ == "__main__":
     clf = TabNetClassifier(
         seed=seed,
         optimizer_fn=Adam,
-        optimizer_params={"lr": 2e-2},
+        optimizer_params={"lr": 1e-2},
         scheduler_fn=ExponentialLR,
         scheduler_params={"gamma": 0.95},
     )
