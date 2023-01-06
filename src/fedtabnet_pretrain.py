@@ -11,7 +11,7 @@ from tabnet import PretrainerClient, PretrainerServer
 if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
-    config = easyfl.load_config("./config/income_pretrain.yaml")
+    config = easyfl.load_config("./config/poker_pretrain.yaml")
 
     dataset, cat_idxs, cat_dims = get_dataset(
         file_path=config.data.file_path,

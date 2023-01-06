@@ -13,7 +13,7 @@ if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
     # load config
-    config = easyfl.load_config("./config/income_fine_tuning.yaml")
+    config = easyfl.load_config("./config/poker_fine_tuning.yaml")
 
     # dataset
     dataset, cat_idxs, cat_dims = get_dataset(
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     output_dim, _ = infer_output_dim(y_train)
 
     # pretrained model
-    pretrain_config = easyfl.load_config("./config/income_pretrain.yaml")
+    pretrain_config = easyfl.load_config("./config/poker_pretrain.yaml")
     pretrain_params = pretrain_config.model_parameters
     pretarined_model = TabNetPretraining(
         input_dim=input_dim,
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     load_weights_from_pretrained(
         model,
         pretarined_model,
-        file_path="./saved_models/pretrain_global_model_r_4.pth",
+        file_path="./saved_models/tabnet/poker_hand_pretrained_1000.zip",
     )
 
     easyfl.register_dataset(train_data=train_data, test_data=test_data)
