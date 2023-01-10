@@ -108,7 +108,7 @@ class Client(BaseClient):
             self.test_loss /= test_size
             self.test_accuracy = 100.0 * float(correct) / test_size
 
-        logger.debug(
+        logger.info(
             "Client {}, testing -- Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)".format(
                 self.cid, self.test_loss, correct, test_size, self.test_accuracy
             )
