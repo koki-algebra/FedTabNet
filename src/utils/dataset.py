@@ -21,9 +21,14 @@ def get_dataset(
     test_df: pd.DataFrame
     valid_df: pd.DataFrame
     train_df, test_df = train_test_split(df, train_size=train_size, random_state=seed)
-    train_l_df, train_u_df = train_test_split(
-        train_df, train_size=labeled_size, random_state=seed
-    )
+    if labeled_size == 1.0:
+        train_l_df = train_df
+    else:
+        train_l_df, train_u_df = train_test_split(
+            train_df, train_size=labeled_size, random_state=seed
+        )
+        train_u_indices = train_u_df.index.values
+
     if valid_size is not None:
         test_df, valid_df = train_test_split(
             test_df, test_size=valid_size, random_state=seed
@@ -31,7 +36,6 @@ def get_dataset(
         valid_indices = valid_df.index.values
 
     train_l_indices = train_l_df.index.values
-    train_u_indices = train_u_df.index.values
     test_indices = test_df.index.values
 
     # Simple preprocessing
@@ -66,19 +70,21 @@ def get_dataset(
     X_l_train = df[features].values[train_l_indices]
     y_l_train = df[target].values[train_l_indices]
 
-    # train unlabeled
-    X_u_train = df[features].values[train_u_indices]
-    y_u_train = df[target].values[train_u_indices]
-
     # test
     X_test = df[features].values[test_indices]
     y_test = df[target].values[test_indices]
 
     dataset = {
         "train_labeled": (X_l_train, y_l_train),
-        "train_unlabeled": (X_u_train, y_u_train),
         "test": (X_test, y_test),
     }
+
+    if labeled_size != 1.0:
+        # train unlabeled
+        X_u_train = df[features].values[train_u_indices]
+        y_u_train = df[target].values[train_u_indices]
+
+        dataset["train_unlabeled"] = (X_u_train, y_u_train)
 
     if valid_size is not None:
         # valid
