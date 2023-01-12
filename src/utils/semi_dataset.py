@@ -5,6 +5,7 @@ from typing import Dict
 import numpy as np
 from torch.utils.data import DataLoader, TensorDataset
 from easyfl.datasets import FederatedDataset
+from easyfl.datasets.dataset import default_process_x, default_process_y
 from easyfl.datasets.simulation import data_simulation, SIMULATE_IID
 
 logger = logging.getLogger(__name__)
@@ -15,6 +16,8 @@ class FederatedSemiSLDataset(FederatedDataset):
         self,
         labeled_data: Dict[str, np.ndarray],
         unlabeled_data: Dict[str, np.ndarray],
+        process_x=default_process_x,
+        process_y=default_process_x,
         simulated=False,
         do_simulate=True,
         num_of_clients=10,
@@ -26,15 +29,16 @@ class FederatedSemiSLDataset(FederatedDataset):
     ):
         super().__init__()
         self.unlabeled_division = math.floor(
-            labeled_data["x"].shape[0], unlabeled_data["x"].shape[0]
+            unlabeled_data["x"].shape[0] / labeled_data["x"].shape[0]
         )
-        print(self.unlabeled_division)
 
         self.simulated = simulated
         self.labeled_data = labeled_data
         self.unlabeled_data = unlabeled_data
         self._validate_data(labeled_data)
         self._validate_data(unlabeled_data)
+        self.process_x = process_x
+        self.process_y = process_y
         if simulated:
             self._users = sorted(list(self.labeled_data.keys()))
 
@@ -91,6 +95,7 @@ class FederatedSemiSLDataset(FederatedDataset):
         batch_size,
         client_id=None,
         shuffle=True,
+        seed=0,
         drop_last=False,
     ):
         if client_id is None:
@@ -104,6 +109,11 @@ class FederatedSemiSLDataset(FederatedDataset):
         labeled_data_y = labeled_data["y"]
         unlabeled_data_x = unlabeled_data["x"]
         unlabeled_data_y = unlabeled_data["y"]
+
+        labeled_data_x = self._input_process(labeled_data_x)
+        unlabeled_data_x = self._input_process(unlabeled_data_x)
+        labeled_data_y = self._label_process(labeled_data_y)
+        unlabeled_data_y = self._label_process(unlabeled_data_y)
 
         labeled_dataset = TensorDataset(labeled_data_x, labeled_data_y)
         unlabeled_dataset = TensorDataset(unlabeled_data_x, unlabeled_data_y)
@@ -144,6 +154,16 @@ class FederatedSemiSLDataset(FederatedDataset):
             return len(self.labeled_data["y"])
         else:
             return sum([len(self.labeled_data[i]["y"]) for i in self.labeled_data])
+
+    def _input_process(self, sample):
+        if self.process_x is not None:
+            sample = self.process_x(sample)
+        return sample
+
+    def _label_process(self, label):
+        if self.process_y is not None:
+            label = self.process_y(label)
+        return label
 
     def _validate_data(self, data):
         if self.simulated:
