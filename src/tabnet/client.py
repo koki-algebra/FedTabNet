@@ -57,6 +57,7 @@ class Client(BaseClient):
                 loss = loss - conf.lambda_sparse * M_loss
 
                 # Perform backward pass and optimization
+                optimizer.zero_grad()
                 loss.backward()
                 if conf.clip_value:
                     clip_grad_norm(self.model.parameters(), conf.clip_value)
