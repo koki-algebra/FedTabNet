@@ -15,7 +15,7 @@ test_method: "average"
 
 server:
   track: False  # Whether track server metrics using the tracking service.
-  rounds: 5  # Total training round.
+  rounds: 3  # Total training round.
   clients_per_round: 5  # The number of clients to train in each round.
   test_every: 1  # The frequency of testing: conduct testing every N round.
   save_model_every: 10  # The frequency of saving model: save model every N round.
@@ -42,7 +42,7 @@ client:
     lr: 0.01
     momentum: 0.9
     weight_decay: 0
-  seed: 1000
+  seed: 5555
   local_test: False  # Whether test the trained models in clients before uploading them to the server.
 
   clip_value: 1
@@ -56,7 +56,7 @@ tracking:  # The configurations for logging and tracking.
   metric_file: ""
   save_every: 1
 
-seed: 1000
+seed: 5555
 
 # model parameters
 model_parameters:

@@ -17,7 +17,7 @@ class FederatedSemiSLDataset(FederatedDataset):
         labeled_data: Dict[str, np.ndarray],
         unlabeled_data: Dict[str, np.ndarray],
         process_x=default_process_x,
-        process_y=default_process_x,
+        process_y=default_process_y,
         simulated=False,
         do_simulate=True,
         num_of_clients=10,

@@ -47,7 +47,7 @@ class PseudoLabelingClient(BaseClient):
         total_epoch = self.round_time * conf.local_epoch
 
         for i in range(conf.local_epoch):
-            total_epoch += i
+            total_epoch += 1
 
             # current epoch model for pseudo-labeling
             current_epoch_model: torch.nn.Module = self.model
@@ -57,12 +57,12 @@ class PseudoLabelingClient(BaseClient):
             unlabeled_loader = self.train_loader["unlabeled"]
 
             for (X_l, y), (X_u, _) in zip(labeled_loader, unlabeled_loader):
-                # Generate Pseudo-labels
-                y_pseudo: Tensor = generate_pseudo_labels(current_epoch_model, X_u)
-
                 X_l: Tensor = X_l.to(device).float()
                 y: Tensor = y.to(device).long()
                 X_u: Tensor = X_u.to(device).float()
+
+                # Generate Pseudo-labels
+                y_pseudo: Tensor = generate_pseudo_labels(current_epoch_model, X_u)
                 y_pseudo = y_pseudo.to(device).long()
 
                 # predict labeled data
