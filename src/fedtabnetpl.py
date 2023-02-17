@@ -5,16 +5,16 @@ from easyfl.datasets import FederatedTensorDataset
 from pytorch_tabnet.tab_network import TabNet, TabNetPretraining
 from pytorch_tabnet.multiclass_utils import infer_output_dim
 
-from utils import get_dataset
-from tabnet import load_weights_from_pretrained, Client, Server
+from utils import get_dataset, FederatedSemiSLDataset
+from tabnet import load_weights_from_pretrained, PseudoLabelingClient, Server
 
 
-# FedTabNet の Fine-tuning を行う
+# FedTabNetPL の Fine-tuning を行う
 if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
     # 設定ファイルのロード
-    config = easyfl.load_config("./config/poker_fine_tuning.yaml")
+    config = easyfl.load_config("./config/proposal/poker_fine_tuning.yaml")
 
     # データセットのロード
     dataset, cat_idxs, cat_dims = get_dataset(
@@ -25,24 +25,26 @@ if __name__ == "__main__":
         seed=config.seed,
     )
 
-    _, y_u_train = dataset["train_unlabeled"]
-    X_train, y_train = dataset["train_labeled"]
+    X_l_train, y_l_train = dataset["train_labeled"]
+    X_u_train, y_u_train = dataset["train_unlabeled"]
     X_test, y_test = dataset["test"]
 
     # Federated Learning 用のデータセットを定義
-    train_data = FederatedTensorDataset(
-        data={"x": X_train, "y": y_train}, num_of_clients=config.data.num_of_clients
+    train_data = FederatedSemiSLDataset(
+        labeled_data={"x": X_l_train, "y": y_l_train},
+        unlabeled_data={"x": X_u_train, "y": y_u_train},
+        num_of_clients=config.data.num_of_clients,
     )
     test_data = FederatedTensorDataset(
         data={"x": X_test, "y": y_test}, num_of_clients=config.data.num_of_clients
     )
 
     # クラス数を推論
-    input_dim = X_train.shape[1]
+    input_dim = X_u_train.shape[1]
     output_dim, _ = infer_output_dim(y_u_train)
 
     # 事前学習済モデルをロード
-    pretrain_config = easyfl.load_config("./config/poker_pretrain.yaml")
+    pretrain_config = easyfl.load_config("./config/proposal/poker_pretrain.yaml")
     pretrain_params = pretrain_config.model_parameters
     pretarined_model = TabNetPretraining(
         input_dim=input_dim,
@@ -85,12 +87,12 @@ if __name__ == "__main__":
     load_weights_from_pretrained(
         model,
         pretarined_model,
-        file_path="./saved_models/pretrain_global_model_r_4.pth",
+        file_path="./saved_models/pretrain_global_model_r_2.pth",
     )
 
     easyfl.register_dataset(train_data=train_data, test_data=test_data)
     easyfl.register_model(model)
-    easyfl.register_client(client=Client)
+    easyfl.register_client(client=PseudoLabelingClient)
     easyfl.register_server(server=Server)
 
     easyfl.init(config)
