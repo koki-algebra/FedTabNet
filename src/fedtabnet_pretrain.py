@@ -8,11 +8,14 @@ from utils import get_dataset
 from tabnet import PretrainerClient, PretrainerServer
 
 
+# FedTabNet の事前学習
 if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
+    # 設定ファイルのロード
     config = easyfl.load_config("./config/poker_pretrain.yaml")
 
+    # データセットのロード
     dataset, cat_idxs, cat_dims = get_dataset(
         file_path=config.data.file_path,
         target=config.data.target,
@@ -23,6 +26,7 @@ if __name__ == "__main__":
 
     X_train, y_train = dataset["train_unlabeled"]
 
+    # Federated Learning 用のデータセットを定義
     train_data = FederatedTensorDataset(
         data={"x": X_train, "y": y_train}, num_of_clients=config.data.num_of_clients
     )
@@ -30,7 +34,9 @@ if __name__ == "__main__":
     # model parameters
     params = config.model_parameters
 
+    # データセットを登録
     easyfl.register_dataset(train_data=train_data, test_data=None)
+    # モデルの登録
     easyfl.register_model(
         model=TabNetPretraining(
             input_dim=X_train.shape[1],
@@ -51,9 +57,13 @@ if __name__ == "__main__":
             n_indep_decoder=params.n_indep_decoder,
         )
     )
+    # サーバー側の処理を登録
     easyfl.register_server(server=PretrainerServer)
+    # クライアント側の処理を登録
     easyfl.register_client(client=PretrainerClient)
 
+    # 設定を初期化
     easyfl.init(config)
 
+    # 実行
     easyfl.run()

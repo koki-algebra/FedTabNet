@@ -9,13 +9,14 @@ from utils import get_dataset
 from tabnet import load_weights_from_pretrained, Client, Server
 
 
+# FedTabNet の Fine-tuning を行う
 if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
-    # load config
+    # 設定ファイルのロード
     config = easyfl.load_config("./config/poker_fine_tuning.yaml")
 
-    # dataset
+    # データセットのロード
     dataset, cat_idxs, cat_dims = get_dataset(
         file_path=config.data.file_path,
         target=config.data.target,
@@ -24,9 +25,11 @@ if __name__ == "__main__":
         seed=config.seed,
     )
 
+    _, y_u_train = dataset["train_unlabeled"]
     X_train, y_train = dataset["train_labeled"]
     X_test, y_test = dataset["test"]
 
+    # Federated Learning 用のデータセットを定義
     train_data = FederatedTensorDataset(
         data={"x": X_train, "y": y_train}, num_of_clients=config.data.num_of_clients
     )
@@ -34,10 +37,11 @@ if __name__ == "__main__":
         data={"x": X_test, "y": y_test}, num_of_clients=config.data.num_of_clients
     )
 
+    # クラス数を推論
     input_dim = X_train.shape[1]
-    output_dim, _ = infer_output_dim(y_train)
+    output_dim, _ = infer_output_dim(y_u_train)
 
-    # pretrained model
+    # 事前学習済モデルをロード
     pretrain_config = easyfl.load_config("./config/poker_pretrain.yaml")
     pretrain_params = pretrain_config.model_parameters
     pretarined_model = TabNetPretraining(
@@ -59,7 +63,7 @@ if __name__ == "__main__":
         n_indep_decoder=pretrain_params.n_indep_decoder,
     )
 
-    # model
+    # Fine-tuning 用のモデルを定義
     params = config.model_parameters
     model = TabNet(
         input_dim=input_dim,
@@ -78,7 +82,6 @@ if __name__ == "__main__":
         mask_type=params.mask_type,
     )
 
-    # load weights from pretrained model
     load_weights_from_pretrained(
         model,
         pretarined_model,
