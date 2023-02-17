@@ -3,8 +3,8 @@ task_id: "pretrain"
 
 # Provide dataset and federated learning simulation related configuration.
 data:
-  file_path: "./data/poker_hand/poker_hand.csv"
-  target: "CLASS"
+  file_path: "./data/covtype/covtype.zip"
+  target: "Cover_Type"
   train_size: 0.8
   labeled_size: 0.1
   num_of_clients: 10
@@ -15,7 +15,7 @@ test_method: "average"
 
 server:
   track: False  # Whether track server metrics using the tracking service.
-  rounds: 3  # Total training round.
+  rounds: 5  # Total training round.
   clients_per_round: 5  # The number of clients to train in each round.
   test_every: 1  # The frequency of testing: conduct testing every N round.
   save_model_every: 10  # The frequency of saving model: save model every N round.
@@ -34,12 +34,12 @@ server:
 
 client:
   track: False  # Whether track server metrics using the tracking service.
-  batch_size: 2048  # The batch size of training in client.
+  batch_size: 1024  # The batch size of training in client.
   test_batch_size: 5  # The batch size of testing in client.
   local_epoch: 20  # The number of epochs to train in each round.
   optimizer:
     type: "Adam"  # The name of the optimizer, options: Adam, SGD.
-    lr: 0.01
+    lr: 0.02
     momentum: 0.9
     weight_decay: 0
   seed: 5555
@@ -61,15 +61,15 @@ seed: 5555
 # model parameters
 model_parameters:
   pretraining_ratio: 0.8  # Between 0 and 1, percentage of feature to mask for reconstruction
-  n_d: 16  # Width of the decision prediction layer. Bigger values gives more capacity to the model with the risk of overfitting. Values typically range from 8 to 64.
-  n_a: 16  # Width of the attention embedding for each mask. According to the paper n_d=n_a is usually a good choice. (default=8)
-  n_steps: 4  # Number of steps in the architecture (usually between 3 and 10)
+  n_d: 64  # Width of the decision prediction layer. Bigger values gives more capacity to the model with the risk of overfitting. Values typically range from 8 to 64.
+  n_a: 64  # Width of the attention embedding for each mask. According to the paper n_d=n_a is usually a good choice. (default=8)
+  n_steps: 5  # Number of steps in the architecture (usually between 3 and 10)
   gamma: 1.5  # This is the coefficient for feature reusage in the masks. A value close to 1 will make mask selection least correlated between layers. Values range from 1.0 to 2.0.
   cat_emb_dim: 3
   n_independent: 2  # Number of independent Gated Linear Units layers at each step. Usual values range from 1 to 5.
   n_shared: 2  # Number of shared Gated Linear Units at each step Usual values range from 1 to 5
-  virtual_batch_size: 512  # Size of the mini batches used for "Ghost Batch Normalization".
-  momentum: 0.95  # Momentum for batch normalization, typically ranges from 0.01 to 0.4 (default=0.02)
+  virtual_batch_size: 128  # Size of the mini batches used for "Ghost Batch Normalization".
+  momentum: 0.7  # Momentum for batch normalization, typically ranges from 0.01 to 0.4 (default=0.02)
   mask_type: "sparsemax"  # Either "sparsemax" or "entmax" : this is the masking function to use for selecting features.
   n_shared_decoder: 1  # Number of shared GLU block in decoder.
   n_indep_decoder: 1  # Number of independent GLU block in decoder.
