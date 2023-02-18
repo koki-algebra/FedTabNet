@@ -49,3 +49,19 @@ FedTabNet は [EasyFL](https://github.com/EasyFL-AI/EasyFL) という Federated 
 src/fedtabnetpl.py
 ```
 を実行すると FedTabNetPL の Fine-tuning が実行される. Pre-training は fedtabnet_pretraining.py を用いれば良い.
+
+# Directories
+<pre>
+.
+├── .devcontainer   (Docker Remote Container 設定ファイル)
+└── src/
+        ├── config/                     (EasyFLの設定ファイル)
+        ├── data/                       (データセット)
+        ├── saved_models/               (事前学習済みモデル)
+        ├── tabnet/                     (EasyFLの自作モデル)
+        ├── utils/                      (ユーティリティ関数)
+        ├── tabnet.py                   (通常のTabNet)
+        ├── fedtabnet_pretrain.py       (FedTabNet pre-training)
+        ├── fedtabnet_fine_tuning.py    (FedTabNet fine-tuining)
+        └── fedtabnetpl.py              (FedTabNetPL fine-tuning)
+</pre>
