@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  app:
+    image: fedtabnet
+    container_name: fedtabnet
+    build:
+      context: ./.devcontainer
+      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./:/workspaces
